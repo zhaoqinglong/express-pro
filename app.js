@@ -1,6 +1,8 @@
 const express = require('express')
 const bodyparser = require('body-parser')
 const path = require('path')
+const morgan = require('morgan')
+const cors = require('cors')
 const expressJwt = require('express-jwt')
 const config = require('./config/config.default')
 const dbCtx = require('./database/dbCtx')
@@ -23,18 +25,14 @@ const fileRoute = require('./app/routes/file')
 const testRoute = require('./app/routes/test')
 const blogRoute = require('./app/routes/blog')
 const app = express()
-
+app.use(cors())
 // 使用中间件来验证token的合法性
-app.use(expressJwt({
-  secret
-}).unless({
-  path: ['/token']
-}))
-
+app.use(expressJwt({ secret }).unless({ path: ['/token'] }))
+// 日志
+app.use(morgan('dev'))
+app.use(require('./config/plugin.morgan')('log'))
 // 使用bodyparser
-app.use(bodyparser.urlencoded({
-  extended: false
-}))
+app.use(bodyparser.urlencoded({ extended: false }))
 app.use(bodyparser.json())
 // path.join 拼接文件路径，并处理文件路径，区别linux和windows
 app.use(express.static(path.join(__dirname, 'app', 'public')))
@@ -44,25 +42,21 @@ app.use('/file', fileRoute)
 app.use('/blog', blogRoute)
 app.use(testRoute)
 app.use(errorHandle)
-// 测试
-// dbCtx.authenticate()
-// .then(() => {
-//   console.log('db connection success')
-// })
-// .catch(err => {
-//   console.log(`err is ${err}`)
-// })
 
 app.listen(config.server.http.port, () => {
-  console.log('express server is running on 9527')
+  console.log(`app server is running on ${config.server.http.port}`)
   // 同步数据库
-  dbCtx.sync({
-    force: false
-  }).then(
-    () => {
-      console.log('数据库已同步')
-    }
-  ).catch(err => {
-    console.log(`sync error is ${err}`)
-  })
+  if (process.env.NODE_ENV === 'production') {
+    dbCtx.authenticate().then(() => {
+      console.log('已正常连接数据库')
+    }).catch(err => {
+      console.log('无法连接数据库，故障描述：', err)
+    })
+  } else if (process.env.NODE_ENV === 'development') {
+    dbCtx.sync({ force: false }).then(_ => {
+      console.log('已同步更新数据库结构')
+    }).catch(err => {
+      console.log('无法同步更新数据库结构，故障描述：', err)
+    })
+  }
 })
