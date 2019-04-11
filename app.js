@@ -6,18 +6,9 @@ const cors = require('cors')
 const expressJwt = require('express-jwt')
 const config = require('./config/config.default')
 const dbCtx = require('./database/dbCtx')
-// const fkcountry = require('./app/model/Country/ER')
-// const TeacherClassRelation = require('./app/model/School/ER')
-// const Comment = require('./app/model/blog/Comment')
-// const Test = require('./app/model/SMAJ/Test')
-const {
-  Player,
-  Team
-} = require('./app/model/Team/Team')
+
 const { secret } = require('./config/plugin.jwt')
-const {
-  errorHandle
-} = require('./app/middleware/authencate')
+const { errorHandle } = require('./app/middleware/authencate')
 // 引用路由
 const membershipRoute = require('./app/routes/membership')
 const taxiRoute = require('./app/routes/taxi')
@@ -36,6 +27,7 @@ app.use(bodyparser.urlencoded({ extended: false }))
 app.use(bodyparser.json())
 // path.join 拼接文件路径，并处理文件路径，区别linux和windows
 app.use(express.static(path.join(__dirname, 'app', 'public')))
+
 app.use('/system', membershipRoute)
 app.use('/taxi', taxiRoute)
 app.use('/file', fileRoute)
