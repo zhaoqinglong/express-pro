@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node app.js",
+    "dev": "cross-env NODE_ENV=development node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "zhaoqinglong",
@@ -29,6 +29,7 @@
     "urlencode": "^1.1.0"
   },
   "devDependencies": {
+    "cross-env": "^5.2.0",
     "nodemon": "^1.18.10",
     "standard": "^12.0.1"
   }
