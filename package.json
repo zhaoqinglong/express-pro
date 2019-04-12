@@ -23,7 +23,7 @@
     "pg": "^7.8.1",
     "pg-hstore": "^2.3.2",
     "save": "^2.3.3",
-    "sequelize": "^4.43.0",
+    "sequelize": "^5.3.2",
     "sequelize-cli": "^5.4.0",
     "tedious": "^5.0.3",
     "urlencode": "^1.1.0"
