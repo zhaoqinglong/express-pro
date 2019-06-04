@@ -15,6 +15,7 @@ const {
   manualTransaction,
   teacherTrans
 } = require('../service/membership/userTransaction')
+const { publishMsg, consumeMsg } = require('../controller/mqController')
 route.get('/country', (req, res, next) => {
   City.findAll({
     include: [Country]
@@ -82,6 +83,14 @@ route.get('/testteam', (req, res, next) => {
   }).catch(err => {
     res.send(err)
   })
+})
+
+route.get('/publishmsg', (req, res, next) => {
+  publishMsg(req, res, next)
+})
+
+route.get('/consumemsg', (req, res, next) => {
+  consumeMsg(req, res, next)
 })
 
 module.exports = route

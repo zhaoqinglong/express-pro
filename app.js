@@ -6,7 +6,7 @@ const cors = require('cors')
 const expressJwt = require('express-jwt')
 const config = require('./config/config.default')
 const dbCtx = require('./database/dbCtx')
-
+// const { publish, consumer } = require('./app/util/RabbitMq')
 const { secret } = require('./config/plugin.jwt')
 const { errorHandle } = require('./app/middleware/authencate')
 // 引用路由
@@ -16,9 +16,11 @@ const fileRoute = require('./app/routes/file')
 const testRoute = require('./app/routes/test')
 const blogRoute = require('./app/routes/blog')
 const app = express()
+// const open = require('amqplib').connect(config.rabbitmq)
+// publish(open)
 app.use(cors())
 // 使用中间件来验证token的合法性
-app.use(expressJwt({ secret }).unless({ path: ['/token'] }))
+// app.use(expressJwt({ secret }).unless({ path: ['/token', '/test'] }))
 // 日志
 app.use(morgan('dev'))
 app.use(require('./config/plugin.morgan')('log'))
@@ -32,7 +34,7 @@ app.use('/system', membershipRoute)
 app.use('/taxi', taxiRoute)
 app.use('/file', fileRoute)
 app.use('/blog', blogRoute)
-app.use(testRoute)
+app.use('/test', testRoute)
 app.use(errorHandle)
 
 app.listen(config.server.http.port, () => {

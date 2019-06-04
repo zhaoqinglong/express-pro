@@ -11,6 +11,12 @@ exports.sequelize = {
   host: '127.0.0.1',
   dialect: 'postgres'
 }
+exports.rabbitmq = {
+  hostname: '127.0.0.1',
+  port: 5672,
+  username: 'admin',
+  password: 'admin'
+}
 exports.msSqlServer = {
   database: 'Test',
   username: 'sa',
